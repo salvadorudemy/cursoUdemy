@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+html(lang="en")
+head
+  meta(charset="UTF-8")
+  meta(name="viewport", content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0")
+  each css in files.CSS
+    link(rel="stylesheet", href=`${css}`)
+
+  title Rianjani - Inicio
+body
+  h1 Probando que todo este bien
+  
+  each js in files.JS
+    script(src=`${js}`)
