@@ -56,9 +56,12 @@ const gulp         = require("gulp"),
           locals : {
             files : files,
           }
-        }
+        },
+        sass : { outputStyle : 'compressed' }
       };
-//Task Pug
+
+// Task Pug
+// =======
 gulp.task("pug",() => {
   gulp.src( `${dir.src}/templates/*.pug` )
   .pipe(plumber())
@@ -67,10 +70,19 @@ gulp.task("pug",() => {
   .pipe(browserSync.reload({ stream : true }));
 });
 
+// Taks SASS
+// =========
+gulp.task("sass",() => {
+  return gulp.src(`${dir.src}/sass/**/*.scss`)
+  .pipe(plumber())
+  .pipe(sass(opts.sass))
+  .pipe(gulp.dest(`${dir.development}/css`))
+  .pipe(browserSync.reload({ stream : true }));
+});
+
 
 // Task server
 // ==========
-
 gulp.task("server", () => {
   browserSync.init({
     server : {
@@ -84,13 +96,12 @@ gulp.task("server", () => {
 
 // whatcher
 // ========
-
 gulp.task("watch", () => {
   gulp.watch("src/templates/**/*.pug", ["pug"]);
+  gulp.watch(`${dir.src}/sass/**/*.scss`, ["sass"]);
 });
 
 
 // Tasks
 // =====
-
-gulp.task("default", ["pug", "watch", "server" ]);
+gulp.task("default", ["pug", "sass", "watch", "server" ]);
