@@ -60,7 +60,7 @@ const gulp         = require("gulp"),
       };
 //Task Pug
 gulp.task("pug",() => {
-  return gulp.src( `${dis.src}/templates/*.pug` )
+  gulp.src( `${dir.src}/templates/*.pug` )
   .pipe(plumber())
   .pipe(pug(opts.pug))
   .pipe(gulp.dest(`${dir.development}`))
@@ -82,5 +82,15 @@ gulp.task("server", () => {
   });
 });
 
+// whatcher
+// ========
+
+gulp.task("watch", () => {
+  gulp.watch("src/templates/**/*.pug", ["pug"]);
+});
+
+
 // Tasks
-gulp.task("default", [ "server" ]);
+// =====
+
+gulp.task("default", ["pug", "watch", "server" ]);
