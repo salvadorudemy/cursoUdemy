@@ -57,7 +57,8 @@ const gulp         = require("gulp"),
             files : files,
           }
         },
-        sass : { outputStyle : 'compressed' }
+        sass : { outputStyle : 'compressed' },
+        es6 : { presets : ["es2015"] },
       };
 
 // Task Pug
@@ -80,6 +81,16 @@ gulp.task("sass",() => {
   .pipe(browserSync.reload({ stream : true }));
 });
 
+//Task JS
+// ======
+gulp.task("js",() => {
+  return gulp.src(`${dir.src}/js/**/*.js`)
+  .pipe(plumber())
+  .pipe(babel(opts.es6))
+  .pipe(gulp.dest(`${dir.development}/js`))
+  .pipe(browserSync.reload({ stream : true }));
+});
+
 
 // Task server
 // ==========
@@ -99,9 +110,10 @@ gulp.task("server", () => {
 gulp.task("watch", () => {
   gulp.watch("src/templates/**/*.pug", ["pug"]);
   gulp.watch(`${dir.src}/sass/**/*.scss`, ["sass"]);
+  gulp.watch(`${dir.src}/js/**/*.js`, ["js"]);
 });
 
 
 // Tasks
 // =====
-gulp.task("default", ["pug", "sass", "watch", "server" ]);
+gulp.task("default", ["pug", "sass", "js", "watch", "server" ]);
