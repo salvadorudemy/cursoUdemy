@@ -59,6 +59,16 @@ const gulp         = require("gulp"),
         },
         sass : { outputStyle : 'compressed' },
         es6 : { presets : ["es2015"] },
+        imagemin : {
+          progressive : true,
+          use : [pngquant()],
+        },
+        svgming :{
+          plugins : [
+            { convertColors : false },
+            { removeAttrs : { attrs : [ 'fill' ]}}
+          ]
+        }
       };
 
 // Task Pug
@@ -74,7 +84,7 @@ gulp.task("pug",() => {
 // Taks SASS
 // =========
 gulp.task("sass",() => {
-  return gulp.src(`${dir.src}/sass/**/*.scss`)
+  gulp.src(`${dir.src}/sass/**/*.scss`)
   .pipe(plumber())
   .pipe(sass(opts.sass))
   .pipe(gulp.dest(`${dir.development}/css`))
@@ -84,11 +94,38 @@ gulp.task("sass",() => {
 //Task JS
 // ======
 gulp.task("js",() => {
-  return gulp.src(`${dir.src}/js/**/*.js`)
+  gulp.src(`${dir.src}/js/**/*.js`)
   .pipe(plumber())
   .pipe(babel(opts.es6))
   .pipe(gulp.dest(`${dir.development}/js`))
   .pipe(browserSync.reload({ stream : true }));
+});
+
+// Taks image
+// ==========
+gulp.task("img",() => {
+  gulp.src(`${dir.src}/img/**/*.+(png|jpg|jpeg|gif)`)
+  .pipe(plumber())
+  .pipe(imagemin(opts.imagemin))
+  .pipe(gulp.dest(`${dir.development}/img`))
+});
+
+// Task svg
+// ========
+gulp.task( 'svg', () => {
+  gulp.src(`${dir.src}/img/**/*.svg)`)
+  .pipe( plumber())
+  .pipe( svgmin( opts.svgmin ))
+  .pipe( gulp.dest(`${dir.development}/img/svg` ))
+})
+
+// Taks webp
+// =========
+gulp.task("webp",() => {
+  gulp.src(`${dir.src}/img/**/*.+(png|jpg|jpeg|gif)`)
+  .pipe(plumber())
+  .pipe(webp())
+  .pipe(gulp.dest(`${dir.development}/img/webp`))
 });
 
 
@@ -116,4 +153,5 @@ gulp.task("watch", () => {
 
 // Tasks
 // =====
-gulp.task("default", ["pug", "sass", "js", "watch", "server" ]);
+gulp.task( "default" , ["pug", "sass", "js", "watch", "server" ]);
+gulp.task( "images" , [ "img", "webp", "svg" ]);
