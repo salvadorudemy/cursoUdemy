@@ -8,11 +8,12 @@ const gulp         = require("gulp"),
       browserSync  = require("browser-sync").create(),
       autoprefixer = require("gulp-autoprefixer"),
       babel        = require("gulp-babel"),
-      cleanCss     = require("gulp-clean-css"),
+      celanCSS     = require("gulp-clean-css"),
       concat       = require("gulp-concat"),
       htmlmin      = require("gulp-htmlmin"),
       imagemin     = require("gulp-imagemin"),
       plumber      = require("gulp-plumber"),
+      uncss        = require("gulp-uncss"),
       pug          = require("gulp-pug"),
       sass         = require("gulp-sass"),
       svgmin       = require("gulp-svgmin"),
@@ -68,7 +69,13 @@ const gulp         = require("gulp"),
             { convertColors : false },
             { removeAttrs : { attrs : [ 'fill' ]}}
           ]
-        }
+        },
+        uncss : { html : [ `${dir.development}/*.html` ]},
+        autoprefixer : {
+          browsers : [ 'last 5 versions' ],
+          cascade : false
+        },
+        htmlmin : { collapseWhitespace : true }
       };
 
 // Task Pug
@@ -129,6 +136,47 @@ gulp.task("webp",() => {
 });
 
 
+// TRAREAS DE PRORDUCION
+// Task css
+// ========
+gulp.task( 'cssprod', () => {
+  gulp.src( files.CSS )
+  .pipe( concat( files.mCSS ))
+  .pipe( uncss( opts.uncss ))
+  .pipe( autoprefixer( opts.autoprefixer ))
+  .pipe( celanCSS() )
+  .pipe( gulp.dest( `${dir.production}/css` ));
+})
+
+// Task js
+// =======
+
+gulp.task( 'jsprod', () => {
+  gulp.src( files.JS )
+  .pipe( concat( files.mJS ))
+  .pipe( uglify() )
+  .pipe( gulp.dest( `${dir.production}/js` ))
+})
+
+// Task html
+// =========
+gulp.task( 'htmlprod', () => {
+  gulp.src( `${dir.development}/*.html`)
+  .pipe( useref() )
+  .pipe( htmlmin( opts.htmlmin ))
+  .pipe( gulp.dest( `${dir.development}`))
+})
+
+// Taks image
+// ==========
+gulp.task("imgprod",() => {
+  gulp.src(`${dir.development}/img/**/*.+(png|jpg|jpeg|gif)`)
+  .pipe(gulp.dest(`${dir.production}/img`))
+});
+
+
+
+// TAREAS DEL SERVIDOR
 // Task server
 // ==========
 gulp.task("server", () => {
@@ -155,3 +203,4 @@ gulp.task("watch", () => {
 // =====
 gulp.task( "default" , ["pug", "sass", "js", "watch", "server" ]);
 gulp.task( "images" , [ "img", "webp", "svg" ]);
+gulp.task( "production", [ "jsprod", "cssprod", "imgprod", "htmlprod"])
