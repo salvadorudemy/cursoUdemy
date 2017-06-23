@@ -1,3 +1,46 @@
-body{
-  background-color: blue;
-}
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700');
+
+// Variables para los pesos de las fuentes
+  $light  : 300;
+  $normal : 400;
+  $bold   : 700;
+
+// Paleta de colores
+  $fc-l : #FFAB00;
+  $fc-s : #353535;
+  $fc-t : #151515;
+  $bg-s : #dcdcdc;
+
+// Estilos Base
+  $body--bg    : hsla(0, 0%, 95%, 1);
+  $body--fz    : 16px;
+  $body--ff    : 'Roboto', sans-serif;
+  $body--color : #777;
+
+// Tamaños de los encabezados
+  $h1 : 3.5em;
+  $h2 : 3em;
+  $h3 : 2.5em;
+  $h4 : 2em;
+  $h5 : 1.5em;
+  $h6 : 1em;
+
+// Estilos imagenes
+  $mx-width : 100%;
+
+// Estilos de enlaces
+  $link--color : initial;
+
+// Estilos parrafos
+  $p--fz  : 1em;
+  $p--lh  : 1.5em;
+
+// Imporar Base
+  @import "base/_reset";
+  @import "base/_base";
+
+// Importar Layout
+
+// Importar Module
+
+// Importar State
